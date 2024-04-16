@@ -48,7 +48,7 @@ data("iris")
 ```{r}
 
 iris_long<- iris %>% 
-  tidyr::pivot_longer(cols=matches("Sepal.Length|Sepal.Width|Petal.Length|Petal.Width"), names_to = "Trait", values_to = "Size"
+  tidyr::pivot_longer(cols=matches("Sepal.Length|Sepal.Width|Petal.Length|Petal.Width"), names_to = "Trait", values_to = "Size")
                       
 ```
 
