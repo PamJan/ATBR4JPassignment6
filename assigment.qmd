@@ -1,0 +1,140 @@
+---
+title: "assigment Session 6"
+author:
+  name: Jan Pamula
+format: 
+  html:
+      embed-resources: true
+      theme: lumen
+      toc: true
+      toc-color: red
+      toc-location: left
+      toc-depth: 6
+      toc-expand: 6
+      code-tools:
+        source: true
+        toggle: true
+      code-fold: true
+      code-summary: "Show the code"
+      code-overflow: wrap
+      page-layout: full
+editor: visual
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
+# 1- Load the "iris" dataset.
+
+Loading libraries
+
+```{r}
+
+library(tidyr)
+library(dplyr)
+
+```
+
+Loading "iris" dataset
+
+```{r}
+
+data("iris")
+
+```
+
+# 2- Transform it to longer
+
+```{r}
+
+iris_long<- iris %>% 
+  tidyr::pivot_longer(cols=matches("Sepal.Length|Sepal.Width|Petal.Length|Petal.Width"), names_to = "Trait", values_to = "Size"
+                      
+```
+
+transforming "iris" database to "longer" by function
+`tidyr::pivot_longer`:
+
+-   `iris_long<-` - name of new dataset
+
+-   `%>%` - symbol for concatenate operations
+
+-   `cols=matches("Sepal.Length|Sepal.Width|Petal.Length|Petal.Width")` -
+    indicate columns we want to pivot
+
+-   `names_to = "Trait"` - how column witch names of pivoting columns
+    (Sepal.Length, Sepal.Width, Petal.Length, Petal.Width) will be
+    called ("Trait")
+
+-   `values_to = "Size"` - how will be column called ("Size") with
+    values of pivoting columns
+
+# 3- Answer the following questions.
+
+## A) What is the mean length and width of the sepal and petal of each species?
+
+```{r}
+
+iris_mean <- iris_long %>% 
+  group_by(Species, Trait) %>% 
+  summarise(MeanSize = mean(Size))
+
+```
+
+-   `iris_mean <-` - name of new dataset
+
+-   `%>%` - symbol for concatenate operations
+
+-   `group_by(Species, Trait)` - grouping by columns
+
+-   `summarise(MeanSize = mean(Size))` - creating new dataset with
+    grouped by columns and new column (named "MeanSize") which is equal
+    mean of specific group
+
+## B) What is the largest and widest, petal and sepal, of virginica and versicolor species?
+
+```{r}
+
+largest_widest_virginica_versicolor <- iris_long %>%
+  dplyr::filter(Species %in% c("virginica", "versicolor")) %>%
+  group_by(Species, Trait) %>% 
+  summarise(MaxSize = max(Size))
+
+```
+
+-   `largest_widest_virginica_versicolor <-` - name of new dataset
+
+-   `%>%` - symbol for concatenate operations
+
+-   `dplyr::filter(Species %in% c("virginica", "versicolor"))` - filter
+    for records that iclude "virginica" or "versicolor" in column
+    "Species"
+
+-   `group_by(Species, Trait)` - grouping by columns
+
+-   `summarise(MaxSize = max(Size))` - creating new dataset with grouped
+    by columns and new column (named "MaxSize") which is equal max value
+    of specific group
+
+## C) For each species, for sepal and petal, width and length, how many observations are above the mean?
+
+```{r}
+
+over_mean <- iris_long  %>%
+  filter(Size > mean(Size)) %>% 
+  group_by(Species, Trait) %>% 
+  summarise(n = n())
+
+```
+
+-   `over_mean <-` - name of new dataset
+
+-   `%>%` - symbol for concatenate operations
+
+-   `filter(Size > mean(Size))` - filter rows where Size \> mean(Size)
+
+-   `group_by(Species, Trait)` - grouping by columns
+
+-   `summarise(n = n())` - creating new dataset with grouped by columns
+    and new column (named "n") which is equal number of appearances of
+    specific group
